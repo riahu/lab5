@@ -1,7 +1,39 @@
-/* address-book.js
-    this is where you will add your JavaScript to complete Lab 5
-*/
+$(function() {
+    var emps = Employees.entries;
+    sortObjArray(emps, 'last');
+    render(emps);
+    $(".sort-ui .btn").click(function() {
+        var sortBtn = $(this);
+        sortBtn.siblings('.active').removeClass('active');
+        sortBtn.addClass('active');
+        sortObjArray(emps, sortBtn.attr('data-sortby'));
+        render(emps);
+    });
+});
 
+function render(entries) {
+    var template = $('.template');
+    var adbook = $('.address-book');
+        adbook.hide();
+    adbook.empty();
+    $.each(entries, function() {
+        var transfer = template.clone();
+        for (p in this) {
+            if (p === 'pic') {
+                transfer.find('.pic').attr({
+                    src: this[p],
+                    alt: 'Picture of ' + this['first'] + ' ' + this['last']
+                });
+            }
+            else {
+                transfer.find('.' + p).html(this[p]);
+            }
+        }
+        transfer.removeClass('template');
+        adbook.append(transfer);
+    });
+    adbook.fadeIn();
+}
 
 /* sortObjArray()
     sorts an array of objects by a given property name
